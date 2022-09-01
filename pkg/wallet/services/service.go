@@ -6,15 +6,23 @@ import (
 	"github.com/Umar2505/wallet_12/pkg/wallet/types"
 )
 
+var ErrPaymentNotFound = errors.New("payment not found")
+
 type Service struct {
 	accounts []*types.Account
+	payments []*types.Payment
 }
 
-func (s *Service) FindAccountByID(accountID int64) (*types.Account, error) {
-	for _, v := range s.accounts {
-		if v.ID==accountID {
-			return v,nil
+func (s *Service) Reject(paymentID string) error  {
+	for _, v := range s.payments {
+		if v.ID==paymentID {
+			for _, a := range s.accounts {
+				if v.AccountID==a.ID {
+					a.Balance+=v.Amount
+					return nil
+				}
+			}
 		}
 	}
-	return nil,errors.New("account not found")
+	return  ErrPaymentNotFound
 }

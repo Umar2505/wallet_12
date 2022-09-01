@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/Umar2505/wallet_12/pkg/wallet/types"
@@ -12,7 +13,7 @@ var s *Service = new(Service)
 var accounts = []*types.Account{
 	{
 		ID: 1,
-		Balance: 200_000,
+		Balance: 195_000,
 	},
 	{
 		ID: 2,
@@ -28,43 +29,43 @@ var accounts = []*types.Account{
 	},
 }
 
-func TestService_FindAccountByID_positive(t *testing.T) {
-	
-	s.accounts=accounts
-	
-
-	expected := types.Account{
-		ID: 2,
-		Balance: 50_000,
-	}
-
-	result,err:=s.FindAccountByID(2)
-	if err!=nil {
-		fmt.Println(err)
-	}
-
-	if result.ID!=expected.ID {
-		fmt.Printf("Expected: %v, Recieved: %v",expected,result)
-	}
+var payments= []*types.Payment{
+	{
+		ID: "10",
+		Amount: 1000,
+		AccountID: 3,
+	},
+	{
+		ID: "11",
+		Amount: 5_000,
+		AccountID: 1,
+	},
+	{
+		ID: "12",
+		Amount: 2_000,
+		AccountID: 2,
+	},
 }
 
-func TestService_FindAccountByID_notFound(t *testing.T) {
+func TestService_Reject_positive(t *testing.T) {
 	
 	s.accounts=accounts
-	
+	s.payments=payments
 
-	expected := types.Account{
-		ID: 0,
-		Balance: 10_000,
+	ex:= types.Account{
+		ID: 1,
+		Balance: 200_000,
 	}
+	expected := &ex
 
-	result,err:=s.FindAccountByID(0)
+	err:=s.Reject("11")
 	if err!=nil {
-		t.Fatal(err)
+		fmt.Println(err)
 		return
 	}
 
-	if result.ID!=expected.ID && result.Balance!=expected.Balance {
-		fmt.Printf("Expected: %v, Recieved: %v",expected,result)
+	if !reflect.DeepEqual(s.accounts[0],expected) {
+		fmt.Printf("Expected: %v, recieved: %v",expected,s.accounts[0])
+		return
 	}
 }
