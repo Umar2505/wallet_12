@@ -7,6 +7,8 @@ import (
 	"github.com/Umar2505/wallet_12/pkg/wallet/types"
 )
 
+var s *Service = new(Service)
+
 var accounts = []*types.Account{
 	{
 		ID: 1,
@@ -28,9 +30,7 @@ var accounts = []*types.Account{
 
 func TestService_FindAccountByID_positive(t *testing.T) {
 	
-	s:= &Service{
-		accounts: accounts,
-	}
+	s.accounts=accounts
 	
 
 	expected := types.Account{
@@ -40,7 +40,7 @@ func TestService_FindAccountByID_positive(t *testing.T) {
 
 	result,err:=s.FindAccountByID(2)
 	if err!=nil {
-		t.Error(err.Error())
+		fmt.Println(err)
 	}
 
 	if result.ID!=expected.ID {
@@ -50,9 +50,7 @@ func TestService_FindAccountByID_positive(t *testing.T) {
 
 func TestService_FindAccountByID_notFound(t *testing.T) {
 	
-	s:= &Service{
-		accounts: accounts,
-	}
+	s.accounts=accounts
 	
 
 	expected := types.Account{
@@ -62,7 +60,8 @@ func TestService_FindAccountByID_notFound(t *testing.T) {
 
 	result,err:=s.FindAccountByID(0)
 	if err!=nil {
-		t.Error(err.Error())
+		t.Fatal(err)
+		return
 	}
 
 	if result.ID!=expected.ID && result.Balance!=expected.Balance {
