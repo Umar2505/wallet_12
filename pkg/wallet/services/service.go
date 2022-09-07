@@ -19,6 +19,7 @@ func (s *Service) Reject(paymentID string) error  {
 			for _, a := range s.accounts {
 				if v.AccountID==a.ID {
 					a.Balance+=v.Amount
+					v.Status=types.PaymentStatusFail
 					return nil
 				}
 			}
