@@ -54,7 +54,7 @@ func TestService_Reject_positive(t *testing.T) {
 
 	ex:= types.Account{
 		ID: 1,
-		Balance: 20checkout 0_000,
+		Balance: 200_000,
 	}
 	expected := &ex
 
